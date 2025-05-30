@@ -1,2 +1,2 @@
 # Flood_YOLO
-it uses the machine learning
+it uses the machine learning.
