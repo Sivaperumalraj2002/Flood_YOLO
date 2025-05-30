@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 2
+names: ['flood', 'house']
+
+roboflow:
+  workspace: final-year-project-f8l24
+  project: flood-detection-2i4xt
+  version: 19
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/final-year-project-f8l24/flood-detection-2i4xt/dataset/19

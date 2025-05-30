@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FloodSenseAI Detection Result</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #1e90ff;
+      --secondary-color: #104e8b;
+      --accent-color: #87cefa;
+      --text-color: #2f4f4f;
+      --light-bg: #e6f3fa;
+      --white: #ffffff;
+      --error-color: #dc143c;
+      --success-color: #228b22;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: var(--text-color);
+      background: var(--light-bg);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+    }
+
+    .heading-box h1 {
+      color: var(--primary-color);
+      font-size: 2.5rem;
+      text-align: center;
+    }
+
+    .heading-box h2 {
+      color: var(--secondary-color);
+      font-size: 1.8rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .error-message {
+      color: var(--error-color);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .output-media {
+      width: 100%;
+      max-width: 600px;
+      margin: 1.5rem auto;
+      border-radius: 12px;
+      display: block;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 1.5rem 0;
+    }
+
+    li {
+      background: var(--light-bg);
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 0.5rem;
+    }
+
+    .suggestion-box {
+      background: var(--light-bg);
+      padding: 1.5rem;
+      border-radius: 16px;
+      margin-top: 1.5rem;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      background: var(--white);
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+    }
+
+    .step-icon {
+      font-size: 1.5rem;
+      margin-right: 1rem;
+      color: var(--primary-color);
+    }
+
+    .download-button {
+      display: inline-block;
+      background: var(--success-color);
+      color: var(--white);
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      text-decoration: none;
+      margin-top: 1rem;
+    }
+
+    .download-button:hover {
+      background: #006400;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="heading-box">
+      <h1>FloodSenseAI Detection Result</h1>
+    </div>
+
+    {% if error %}
+      <p class="error-message">{{ error }}</p>
+    {% else %}
+      <div class="result-box">
+        <div class="heading-box">
+          <h2>Analyzed Output:</h2>
+        </div>
+        <figure>
+          {% if is_video %}
+            <video class="output-media" controls>
+              <source src="{{ url_for('static', filename=output_path) }}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          {% else %}
+            <img class="output-media" src="{{ url_for('static', filename=output_path) }}" alt="Analyzed Image">
+          {% endif %}
+        </figure>
+
+        <div class="heading-box">
+          <h2>Detected Flood Objects:</h2>
+        </div>
+        <ul>
+          {% for obj in flood_objects %}
+            <li>{{ obj }}</li>
+          {% endfor %}
+        </ul>
+
+        <div class="suggestion-box">
+          <div class="heading-box">
+            <h2>Flood Mitigation Steps:</h2>
+          </div>
+          <div class="step">
+            <div class="step-icon"><i class="fas fa-water"></i></div>
+            <div class="step-content">
+              <h3>Step 1: Situation Analysis</h3>
+              <p>{{ flood_suggestion.split('\n')[0] }}</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="step-content">
+              <h3>Step 2: Immediate Actions</h3>
+              <p>{{ flood_suggestion.split('\n')[1] if flood_suggestion.split('\n')|length > 1 else "N/A" }}</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-icon"><i class="fas fa-tools"></i></div>
+            <div class="step-content">
+              <h3>Step 3: Long-term Mitigation</h3>
+              <p>{{ flood_suggestion.split('\n')[2] if flood_suggestion.split('\n')|length > 2 else "N/A" }}</p>
+            </div>
+          </div>
+          <a class="download-button" href="{{ url_for('download_report', filename=report_filename) }}">
+            Download Flood Report
+          </a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</body>
+</html>
